@@ -1,0 +1,35 @@
+name: Build HCR-S.TEC
+on:
+  workflow_dispatch:
+  push:
+    branches: [ principal ]
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reassemble source
+        shell: pwsh
+        run: |
+          cmd /c "copy /b HCR-S.TEC-source.part1+HCR-S.TEC-source.part2 HCR-S.TEC-source.zip"
+          Expand-Archive HCR-S.TEC-source.zip -DestinationPath src
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: oven-sh/setup-bun@v2
+      - uses: dtolnay/rust-toolchain@stable
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+        working-directory: src
+      - run: pnpm run download:oix -- --current-platform
+        working-directory: src
+      - run: pnpm run download:pdfcpu -- --current-platform
+        working-directory: src
+      - run: pnpm run download:qwen-asr -- --current-platform
+        working-directory: src
+      - run: pnpm run build
+        working-directory: src
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HCR-S.TEC-windows
+          path: src/release/**
