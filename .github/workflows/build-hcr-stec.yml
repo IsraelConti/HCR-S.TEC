@@ -27,7 +27,9 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - uses: dtolnay/rust-toolchain@stable
       - run: corepack enable
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+        working-directory: src
+      - run: pnpm rebuild interpreter-window-pin
         working-directory: src
       - run: pnpm run download:oix -- --current-platform
         working-directory: src
