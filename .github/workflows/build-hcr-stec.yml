@@ -16,15 +16,8 @@ jobs:
         run: |
           cmd /c "copy /b HCR-S.TEC-source.part1+HCR-S.TEC-source.part2 HCR-S.TEC-source.zip"
           Expand-Archive HCR-S.TEC-source.zip -DestinationPath src
-          git clone --depth 1 https://github.com/openinterpreter/interpreter-workstation.git upstream
-          if (Test-Path upstream/apps/interpreter-extension/playwriter) {
-            New-Item -ItemType Directory -Force src/apps/interpreter-extension | Out-Null
-            Copy-Item upstream/apps/interpreter-extension/playwriter src/apps/interpreter-extension -Recurse -Force
-          }
-          if (Test-Path upstream/resources/browser-extension-relay) {
-            New-Item -ItemType Directory -Force src/resources | Out-Null
-            Copy-Item upstream/resources/browser-extension-relay src/resources -Recurse -Force
-          }
+          New-Item -ItemType Directory -Force src/apps/interpreter-extension/playwriter | Out-Null
+          '{"name":"interpreter-playwriter","version":"0.0.0","private":true}' | Set-Content src/apps/interpreter-extension/playwriter/package.json
           Invoke-WebRequest -Uri "https://raw.githubusercontent.com/openinterpreter/interpreter-workstation/main/package.json" -OutFile "src/package.json"
           Get-Content src/package.json -Raw | ConvertFrom-Json | Out-Null
       - uses: actions/setup-node@v4
