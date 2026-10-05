@@ -19,7 +19,6 @@ jobs:
           New-Item -ItemType Directory -Force src/apps/interpreter-extension/playwriter | Out-Null
           '{"name":"interpreter-playwriter","version":"0.0.0","private":true}' | Set-Content src/apps/interpreter-extension/playwriter/package.json
           Invoke-WebRequest -Uri "https://raw.githubusercontent.com/openinterpreter/interpreter-workstation/main/package.json" -OutFile "src/package.json"
-          Get-Content src/package.json -Raw | ConvertFrom-Json | Out-Null
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -43,7 +42,15 @@ jobs:
         shell: pwsh
         run: pnpm run ensure:js-repl-runtime-assets; pnpm run build:renderer; pnpm run build:electron
         working-directory: src
+      - name: Collect Windows executables
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force artifact | Out-Null
+          $files = Get-ChildItem src -Recurse -File -Include *.exe,*.msi,*.zip
+          if ($files.Count -eq 0) { throw "No se ha generado ningún ejecutable Windows" }
+          $files | ForEach-Object { Copy-Item $_.FullName artifact -Force }
+          Get-ChildItem artifact
       - uses: actions/upload-artifact@v4
         with:
           name: HCR-S.TEC-windows
-          path: src/**/release/**
+          path: artifact/**
