@@ -18,9 +18,10 @@ jobs:
           Expand-Archive HCR-S.TEC-source.zip -DestinationPath src
           New-Item -ItemType Directory -Force src/apps/interpreter-extension/playwriter | Out-Null
           '{"name":"interpreter-playwriter","version":"0.0.0","private":true}' | Set-Content src/apps/interpreter-extension/playwriter/package.json
-          New-Item -ItemType Directory -Force src/resources/browser-extension-relay/node_modules | Out-Null
+          New-Item -ItemType Directory -Force src/resources/browser-extension-relay/node_modules/hono | Out-Null
           New-Item -ItemType Directory -Force src/resources/browser-extension-relay/dist/extension | Out-Null
           '{"name":"browser-extension-relay","version":"0.0.0","private":true}' | Set-Content src/resources/browser-extension-relay/package.json
+          '{"name":"hono","version":"4.0.0","private":true}' | Set-Content src/resources/browser-extension-relay/node_modules/hono/package.json
           '{}' | Set-Content src/resources/browser-extension-relay/runtime-manifest.json
           '{"name":"browser-extension-relay","version":"0.0.0","manifest_version":3}' | Set-Content src/resources/browser-extension-relay/manifest.json
           'console.log("HCR-S.TEC browser extension relay");' | Set-Content src/resources/browser-extension-relay/dist/start-relay-server.js
