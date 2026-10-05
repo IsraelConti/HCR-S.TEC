@@ -39,7 +39,9 @@ jobs:
         working-directory: src
       - run: pnpm run download:qwen-asr -- --current-platform
         working-directory: src
-      - run: pnpm run build
+      - name: Build renderer and Electron
+        shell: pwsh
+        run: pnpm run ensure:js-repl-runtime-assets; pnpm run build:renderer; pnpm run build:electron
         working-directory: src
       - uses: actions/upload-artifact@v4
         with:
