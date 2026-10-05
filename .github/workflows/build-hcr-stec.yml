@@ -67,4 +67,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: HCR-S.TEC-windows
-          path: src/release/**
+          path: src/dist/Interpreter-win-x64-0.1.24.exe
