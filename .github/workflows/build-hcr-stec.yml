@@ -11,13 +11,25 @@ jobs:
       npm_config_msvs_version: '2022'
     steps:
       - uses: actions/checkout@v4
-      - name: Reassemble source
+      - name: Reassemble and patch source
         shell: pwsh
         run: |
           cmd /c "copy /b HCR-S.TEC-source.part1+HCR-S.TEC-source.part2 HCR-S.TEC-source.zip"
           Expand-Archive HCR-S.TEC-source.zip -DestinationPath src
           New-Item -ItemType Directory -Force src/apps/interpreter-extension/playwriter | Out-Null
           '{"name":"interpreter-playwriter","version":"0.0.0","private":true}' | Set-Content src/apps/interpreter-extension/playwriter/package.json
+          New-Item -ItemType Directory -Force src/resources/browser-extension-relay/node_modules | Out-Null
+          '{"name":"browser-extension-relay","version":"0.0.0","private":true}' | Set-Content src/resources/browser-extension-relay/package.json
+          $p = Get-Content src/product.json -Raw | ConvertFrom-Json
+          $p.nameShort = 'HCR-S.TEC'
+          $p.nameLong = 'HCR-S.TEC'
+          $p.applicationName = 'hcr-s-tec'
+          $p.dataFolderName = '.hcr-s-tec'
+          $p.win32DirName = 'HCR-S.TEC'
+          $p.win32NameVersion = 'HCR-S.TEC'
+          $p.win32AppUserModelId = 'Aurora.HCRSTEC'
+          $p.urlProtocol = 'hcr-stec'
+          $p | ConvertTo-Json -Depth 100 | Set-Content src/product.json
           Invoke-WebRequest -Uri "https://raw.githubusercontent.com/openinterpreter/interpreter-workstation/main/package.json" -OutFile "src/package.json"
       - uses: actions/setup-node@v4
         with:
