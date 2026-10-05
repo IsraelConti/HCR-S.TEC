@@ -19,11 +19,12 @@ jobs:
           New-Item -ItemType Directory -Force src/apps/interpreter-extension/playwriter | Out-Null
           '{"name":"interpreter-playwriter","version":"0.0.0","private":true}' | Set-Content src/apps/interpreter-extension/playwriter/package.json
           New-Item -ItemType Directory -Force src/resources/browser-extension-relay/node_modules | Out-Null
-          New-Item -ItemType Directory -Force src/resources/browser-extension-relay/dist | Out-Null
+          New-Item -ItemType Directory -Force src/resources/browser-extension-relay/dist/extension | Out-Null
           '{"name":"browser-extension-relay","version":"0.0.0","private":true}' | Set-Content src/resources/browser-extension-relay/package.json
           '{}' | Set-Content src/resources/browser-extension-relay/runtime-manifest.json
           '{"name":"browser-extension-relay","version":"0.0.0","manifest_version":3}' | Set-Content src/resources/browser-extension-relay/manifest.json
           'console.log("HCR-S.TEC browser extension relay");' | Set-Content src/resources/browser-extension-relay/dist/start-relay-server.js
+          '{"manifest_version":3,"name":"HCR-S.TEC Browser Relay","version":"0.0.0"}' | Set-Content src/resources/browser-extension-relay/dist/extension/manifest.json
           $p = Get-Content src/product.json -Raw | ConvertFrom-Json
           $p.nameShort = 'HCR-S.TEC'
           $p.nameLong = 'HCR-S.TEC'
