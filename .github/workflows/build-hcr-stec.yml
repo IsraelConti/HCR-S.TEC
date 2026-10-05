@@ -13,6 +13,7 @@ jobs:
         run: |
           cmd /c "copy /b HCR-S.TEC-source.part1+HCR-S.TEC-source.part2 HCR-S.TEC-source.zip"
           Expand-Archive HCR-S.TEC-source.zip -DestinationPath src
+          if (Test-Path src\package.original.json) { Copy-Item src\package.original.json src\package.json -Force }
       - uses: actions/setup-node@v4
         with:
           node-version: 22
